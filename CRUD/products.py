@@ -14,14 +14,14 @@ products = [
 
 # Add all the REST API end-points here
 
-# example: http://localhost:5000/products   with GET
+# example: $ curl http://localhost:5000/products   with GET
 
 # retrieve all the products with GET request
 @app.route('/products', methods=['GET'])
 def get_products():
     return jsonify(products)
 
-# example: http://localhost:5000/products/144   with GET
+# example: $ curl http://localhost:5000/products/144   with GET
 # retrieve a product by its id
 @app.route('/products/<id>', methods=['GET'])   
 def get_one_product(id):
@@ -30,8 +30,15 @@ def get_one_product(id):
     return jsonify(foundProduct)
 
 
-# example: http://localhost:5000/products/144  with POST
+# example: $ curl http://localhost:5000/products/144  with POST
 # add a product with POST req method
+"""
+rodrig: ~$ curl -X POST \
+-H "Content-Type: application/json" \
+-d '{"id":145, "name": "Pen", "price": 2.5}' \
+http://localhost:5000/products
+
+"""
 @app.route('/products', methods=['POST'])
 def add_product():
     products.append(request.get_json())
