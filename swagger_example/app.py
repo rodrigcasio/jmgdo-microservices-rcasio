@@ -8,7 +8,6 @@ from flask import send_from_directory
 PORT = 5000
 
 myApp = Flask(__name__)
-CORS(myApp)
 
 tasks = [
     {"name": "Laundry", "description": "Do the laundry this weekend"},
@@ -83,5 +82,5 @@ def handle_exception(e):
 
 
 if __name__ == "__main__":
-    CORS = CORS(myApp)
-    myApp.run(port=PORT, debug=False)
+    CORS(myApp)
+    myApp.run(host="127.0.0.1", port=PORT, debug=False)
