@@ -1,3 +1,4 @@
+# imported packages required to create REST APIs with Flask
 from flask import Flask, jsonify, request
 import json
 from flask_cors import CORS
@@ -7,12 +8,68 @@ CORS(app)
 
 
 products = [
-    {'id': 143, 'name': 'Notebook', 'price': 5.49},
-    {'id': 144, 'name': 'Black Marker', 'price': 1.99}
+    {"id": 143, "name": "Notebook", "price": 5.49},
+    {"id": 144, "name": "Black Marker", "price": 1.99},
 ]
 
-#
-#Add all the REST API end-points here
-#
+# Add all the REST API end-points here
 
-app.run(port=5000,debug=True)
+# example: $ curl http://localhost:5000/products   with GET
+
+
+# retrieve all the products with GET request
+@app.route("/products", methods=["GET"])
+def get_products():
+    return jsonify(products)
+
+
+# example: $ curl http://localhost:5000/products/144   with GET
+# retrieve a product by its id
+@app.route("/products/<id>", methods=["GET"])
+def get_one_product(id):
+    id = int(id)
+    foundProduct = [x for x in products if x["id"] == id][0]
+    return jsonify(foundProduct)
+
+
+# example: $ curl http://localhost:5000/products/144  with POST
+# add a product with POST req method
+"""
+rodrig: ~$ curl -X POST \
+-H "Content-Type: application/json" \
+-d '{"id":145, "name": "Pen", "price": 2.5}' \
+http://localhost:5000/products
+
+"""
+
+
+@app.route("/products", methods=["POST"])
+def add_product():
+    products.append(request.get_json())
+    return "product added\n", 201
+
+
+# example: http://localhost:5000/products/144  with PUT
+# update a product by its id with PUT req method
+@app.route("/products/<id>", methods=["PUT"])
+def update_product(id):
+    id = int(id)
+    update_product = json.loads(request.data)
+    product = [x for x in products if x["id"] == id][0]
+    for key, value in update_product.items():
+        product[key] = value
+    return "product updated\n", 204
+
+
+# example: http://localhost:5000/products/144  with DELETE
+# delete product by its id with DELETE method
+@app.route("/products/<id>", methods=["DELETE"])
+def remove_product(id):
+    id = int(id)
+    product = [x for x in products if x["id"] == id][0]
+    products.remove(product)
+
+    return "product removed\n", 204
+
+
+app.run(port=5000, debug=True)
