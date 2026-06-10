@@ -8,6 +8,7 @@ from flask import send_from_directory
 PORT = 5000
 
 myApp = Flask(__name__)
+CORS(myApp)
 
 tasks = [
     {"name": "Laundry", "description": "Do the laundry this weekend"},
